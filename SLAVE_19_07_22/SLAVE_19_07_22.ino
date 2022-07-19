@@ -28,7 +28,7 @@
 //                   - SIRIRAJ    HEMARAT
 //                   - NUTWITCHA  PUENGYAIWATTANA
 //                   - TANUT      TUNLUENG
-//                   - CHANATHIP  YODKHUANG        Bipoe/// suppost
+
 
 //RP2040
 #if !defined(ARDUINO_ARCH_RP2040)
