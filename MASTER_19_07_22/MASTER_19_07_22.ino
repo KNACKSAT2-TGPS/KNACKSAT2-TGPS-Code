@@ -1,3 +1,10 @@
+//KNACKSAT_II - TGPS (SATERLITE)
+
+
+//BY   KITTIPHOP  PHANTHACHART
+
+
+
 #include <Wire.h>
 
 //SLAVE REGISTER ADDRESS MAP
@@ -29,7 +36,7 @@ void setup()
 {
   Wire.begin();
   Serial.begin(115200);
-  Serial.println("master");
+  Serial.println(" MASTER ");
 }
 
 void loop()
@@ -106,11 +113,18 @@ void loop()
     }
   }
 }
-void DOWNLOAD ( byte ADDR ,  byte RGADDR , byte * data,  byte n, unsigned long microsec)
+void DOWNLOAD ( 
+                  byte ADDR 
+                 ,byte RGADDR 
+                 ,byte * data
+                 ,byte n
+                 ,unsigned long microsec
+               )
 {
   Wire.beginTransmission(ADDR);
   Wire.write(RGADDR);
   Wire.endTransmission();
+  
   delay(microsec);
 
   int i = 0;
