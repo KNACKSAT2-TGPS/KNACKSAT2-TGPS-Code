@@ -1,8 +1,9 @@
-//KNACKSAT_II - TGPS (PAYLOAD)
-//BY  - KITTIPHOP  PHANTHACHART
-//    - PONGSAPAT  LAKROD
-//    - WICHAN     WICHARYANUPARP
-//    - SUPASAKORN WORA-URAI
+//       KNACKSAT_II - TGPS (PAYLOAD)
+//             PROGRAMMING BY
+//       - KITTIPHOP  PHANTHACHART
+//       - PONGSAPAT  LAKROD
+//       - WICHAN     WICHARYANUPARP
+//       - SUPASAKORN WORA-URAI
 
 
 
@@ -895,7 +896,6 @@ void GEIGER(int SECOND)
   unsigned  int starttime = millis();
   while (millis() <= starttime + SECOND)
   {
-    //Serial.print("Time1"); Serial.println(cpmcon);
     bool sign = digitalRead(SIGN_I);
 
     // Raw data of Noise Pulse: Not-detected -> Low, Detected -> High
@@ -934,7 +934,6 @@ void GEIGER(int SECOND)
           cpmconPrev = totalSec;
           Serial.print("Time2 :"); Serial.println(cpmcon);
           cpmcon++;
-          //Serial.print("Time2 ::::"); Serial.println(cpmcon);
           if (cpmcon > 200)
           {
             cpmcon = 0;
@@ -943,11 +942,8 @@ void GEIGER(int SECOND)
           if (cpmHistory[cpmcon] > 0)
           {
             cpm -= cpmHistory[cpmcon];
-            //Serial.print("A");Serial.println(cpmHistory[cpmcon]);
-            //Serial.print("A");Serial.println(cpm);
           }
           cpmHistory[cpmcon] = 0;
-          //Serial.print("B");Serial.println(cpmcon);
         }
         //Store count log
         cpmHistory[cpmcon] += signCount;
