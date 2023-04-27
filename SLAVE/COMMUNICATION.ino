@@ -153,7 +153,6 @@ void TGPS_RECEIVE(int byte_in)
 {
   REGIS_ADDR = true;
   byte  j = 0;
-  Serial.println("INPUT");
   while (Wire.available()) //CHECK I2C DATA IS ON BUS
   {
     REGIS_CMD[j] = Wire.read();

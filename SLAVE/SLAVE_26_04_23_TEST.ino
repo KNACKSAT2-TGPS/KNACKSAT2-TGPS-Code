@@ -69,31 +69,31 @@
 #define TGPS_ID            0x22  // KNACKSAT_II - TGPS ,ID ADDRESS
 #define TGPS_SCR           0xE0  // KNACKSAT_II - TGPS ,STATUS COMMAND RADFET ADDRESS 
 #define TGPS_SCC           0xE1  // KNACKSAT_II - TGPS ,STATUS COMMAND SD CARD ADDRESS 
-#define TGPS_CMD           0xF1  // KNACKSAT_II - TGPS ,MANAGEMENT
+#define TGPS_CMD           0xF5  // KNACKSAT_II - TGPS ,MANAGEMENT
 
 // SLAVE REGISTER VALUE
-#define TGPS_DATA_I        0xD0  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.1 ADDRESS
-#define TGPS_DATA_II       0xD1  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.2 ADDRESS
-#define TGPS_DATA_III      0xD2  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.3 ADDRESS
-#define TGPS_DATA_IV       0xD3  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.4 ADDRESS
-#define TGPS_DATA_V        0xD4  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.5 ADDRESS
-#define TGPS_DATA_VI       0xD5  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.6 ADDRESS
-#define TGPS_DATA_VII      0xD6  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.7 ADDRESS
-#define TGPS_DATA_VIII     0xD7  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.8 ADDRESS
+#define TGPS_DATA_I        0xD1  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.1 ADDRESS
+#define TGPS_DATA_II       0xD2  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.2 ADDRESS
+#define TGPS_DATA_III      0xD3  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.3 ADDRESS
+#define TGPS_DATA_IV       0xD4  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.4 ADDRESS
+#define TGPS_DATA_V        0xD5  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.5 ADDRESS
+#define TGPS_DATA_VI       0xD6  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.6 ADDRESS
+#define TGPS_DATA_VII      0xD7  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.7 ADDRESS
+#define TGPS_DATA_VIII     0xD8  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.8 ADDRESS
 
-#define TGPS_DATA_IX       0xD8  // KNACKSAT_II - TGPS ,****DATA   MICRO SD CARD ADDRESS
+#define TGPS_DATA_IX       0xD9  // KNACKSAT_II - TGPS ,****DATA   MICRO SD CARD ADDRESS
 
 //SLAVE REGISTER COMMAND
-#define TGPS_CMD_I         0xC0  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.1 ADDRESS
-#define TGPS_CMD_II        0xC1  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.2 ADDRESS
-#define TGPS_CMD_III       0xC2  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.3 ADDRESS
-#define TGPS_CMD_IV        0xC3  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.4 ADDRESS
-#define TGPS_CMD_V         0xC4  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.5 ADDRESS
-#define TGPS_CMD_VI        0xC5  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.6 ADDRESS
-#define TGPS_CMD_VII       0xC6  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.7 ADDRESS
-#define TGPS_CMD_VIII      0xC7  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.8 ADDRESS
+#define TGPS_CMD_I         0xC1  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.1 ADDRESS
+#define TGPS_CMD_II        0xC2  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.2 ADDRESS
+#define TGPS_CMD_III       0xC3  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.3 ADDRESS
+#define TGPS_CMD_IV        0xC4  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.4 ADDRESS
+#define TGPS_CMD_V         0xC5  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.5 ADDRESS
+#define TGPS_CMD_VI        0xC6  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.6 ADDRESS
+#define TGPS_CMD_VII       0xC7  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.7 ADDRESS
+#define TGPS_CMD_VIII      0xC8  // KNACKSAT_II - TGPS ,****DATA     RADFET NO.8 ADDRESS
 
-#define TGPS_CMD_IX        0xC8  // KNACKSAT_II - TGPS ,****DATA   MICRO SD CARD ADDRESS
+#define TGPS_CMD_IX        0xC9  // KNACKSAT_II - TGPS ,****DATA   MICRO SD CARD ADDRESS
 
 
 
@@ -117,19 +117,21 @@ byte PIN_SD_CS                               ;// PIN_SD_CS = PIN OF SD CARD.
 // ====================<<< VARIABLE >>>====================
 // LOGIC STEP
 bool          REGIS_ADDR      = false        ;  // FOR RECEIVE TO TGPS_PAYLOAD.
-bool          REGIS_DATA_I    = false        ;  // FOR SELECT DATA_SET_I   TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_II   = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_III  = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_IV   = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_V    = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_VI   = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_VII  = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_VIII = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
-bool          REGIS_DATA_IX   = false        ;  // FOR SELECT DATA_SET_II  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+
 bool          STATUS_ID       = false        ;  // FOR CHECK OPERATE DEVICE IN TGPS_PAYLOAD.
 bool          CMD_TGPS        = false        ;  // FOR RETURN COMMAND.
 bool          CMD             = false        ;  // FOR COMMAND MODE.
-bool          STATE           = false        ;  // FOR SELECT MICRO SD CARD TO READ.
+
+bool          REGIS_DATA_I    = false        ;  // FOR SELECT DATA_SET_I    TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_II   = false        ;  // FOR SELECT DATA_SET_II   TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_III  = false        ;  // FOR SELECT DATA_SET_III  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_IV   = false        ;  // FOR SELECT DATA_SET_IV   TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_V    = false        ;  // FOR SELECT DATA_SET_V    TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_VI   = false        ;  // FOR SELECT DATA_SET_VI   TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_VII  = false        ;  // FOR SELECT DATA_SET_VII  TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_VIII = false        ;  // FOR SELECT DATA_SET_VIII TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+bool          REGIS_DATA_IX   = false        ;  // FOR SELECT DATA_SET_IX   TO TRANSMIT TO KNACKSAT_II(SATERLITE SYSTEM)
+
 bool          REQUEST_I       = false        ;  // FOR SETTING STATE WORKING OF REQUEST_I
 bool          REQUEST_II      = false        ;  // FOR SETTING STATE WORKING OF REQUEST_II
 bool          REQUEST_III     = false        ;  // FOR SETTING STATE WORKING OF REQUEST_III
@@ -140,44 +142,43 @@ bool          REQUEST_VII     = false        ;  // FOR SETTING STATE WORKING OF 
 bool          REQUEST_VIII    = false        ;  // FOR SETTING STATE WORKING OF REQUEST_VIII
 bool          REQUEST_IX      = false        ;  // FOR SETTING STATE WORKING OF REQUEST_IX
 
-uint8_t       PSE             =  0x00        ;  // PROCESS START STATE & END STATE
-bool          PSS             = false        ;  // PROCESS START STATE
-bool          PES             = false        ;  // PROCESS END STATE
-char          FN                             ;  // FILE NAME
-unsigned long TP              = 0            ;  // TIME PROCESS
-unsigned long TSP             = 0            ;  // TIME START PROCESS
-unsigned long TEP             = 0            ;  // TIME END PROCESS
-char          CTC                            ;  // CHARACTER TO CHECK
-char          FC                             ;  // FRIST CHARACTER THAT READ FROM FILE
-
-uint16_t      RADFET_0          [16]         ;
-uint16_t      RADFET_1          [16]         ;
-uint16_t      RADFET_2          [16]         ;
-uint16_t      RADFET_3          [16]         ;
-uint16_t      RADFET_4          [16]         ;
-uint16_t      RADFET_5          [16]         ;
-uint16_t      RADFET_6          [16]         ;
-uint16_t      RADFET_7          [16]         ;
 
 bool          fx              = 0            ;
-uint8_t       recentfile                     ;
 
-uint16_t      STATE_BREAK     = 0x0000       ;  // 
-
-// DATA VALUE
-byte          STATUS_PAYLOAD  = 0xFF         ;
-int           ERROR_CHAR      = 0            ;  // ERROR CHARATER FROM MICRO SD-CARD WHEN IT'S READING DATA.
-int           COUNT           = 0            ;  // COUNT CHARATER FROM MICRO SD-CARD WHEN IT'S READING DATA.
+uint16_t      STATE_REQUEST   = 0x0000       ;  // STATEREQUEST
 
 // TIME
 unsigned long PREVIOUSMILLIS  = 0            ;  // SET PREVIOUSTIMETO 0
 unsigned long CURRENTMILLIS                  ;  // CURRENT MILLIS
-int           TIMIE           = 0            ;  // SET UP POWER IN PAYLOAD
+unsigned long TIMIE           = 0            ;  // SET UP POWER IN PAYLOAD
+unsigned long READ_TIME       = 0            ;
 
-// TEMPORARY ARRAY
-unsigned int  ERROR_COUNT       [4]          ;  // FOR TEMPORARY DATA FROM ERROR & COUNT.
-byte          TEMPORARY         [4]          ;  // TEMPORARY DATA FOR APPEND TO BUS.
-uint8_t       buf               [10240]      ;  // CHARACTER READ EACH TIME.
+// HISTORY DATA & PROCESS DATA
+uint16_t      RADFET_I          [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET I.
+uint16_t      RADFET_II         [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET II.
+uint16_t      RADFET_III        [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET III.
+uint16_t      RADFET_IV         [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET IV.
+uint16_t      RADFET_V          [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET V.
+uint16_t      RADFET_VI         [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET VI.
+uint16_t      RADFET_VII        [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET VII.
+uint16_t      RADFET_VIII       [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET VIII.
+
+uint8_t       BUFFER            [10240]      ;  // CHARACTER READ EACH TIME.
+uint8_t       LASTED_FILE                    ;  // LASTED FILE
+unsigned long ERROR_CHAR      = 0            ;  // ERROR CHARATER FROM MICRO SD-CARD ONE FILE.
+unsigned long COUNT           = 0            ;  // COUNT CHARATER FROM MICRO SD-CARD ONE FILE.
+bool          STATE           = false        ;  // FOR SELECT MICRO SD CARD TO READ
+
+uint8_t       PSE             =  0x00        ;  // PROCESS START STATE & END STATE
+bool          PSS             = false        ;  // PROCESS START STATE
+bool          PES             = false        ;  // PROCESS END STATE
+char          FN                             ;  // FILE NAME
+char          CTC                            ;  // CHARACTER TO CHECK
+char          FC                             ;  // FRIST CHARACTER THAT READ FROM FILE
+unsigned long TP              = 0            ;  // TIME PROCESS
+unsigned long TSP             = 0            ;  // TIME START PROCESS
+unsigned long TEP             = 0            ;  // TIME END PROCESS
+
 
 // RECEIVE BUFFER
 byte          REGIS_CMD[2]    = {0xFF, 0xFF} ;
@@ -185,7 +186,8 @@ byte          REGIS_CMD[2]    = {0xFF, 0xFF} ;
 // TRANSMIT BUFFER
 byte          FB_REGIS        = 0xFF         ;  // FOR FEEDBACK STATUS AND COMMAND.
 byte          FB_CMD          = 0xFF         ;
-byte          SUBSET_BYTE     = 0            ;  // FOR APPEND IN ARRAY BUS.
+
+byte          STATUS_PAYLOAD  = 0xFF         ;
 
 // ===================================================================
 //
@@ -288,17 +290,17 @@ void setup()
 
   analogReadResolution(12);
 
+  delay(5000);
   Serial.println("TGPS_ID: 0x" + String(TGPS_ID, HEX));
 
   Wire.onReceive(TGPS_RECEIVE);
   Wire.onRequest(TGPS_REQUEST);
-  //  REGIS_ADDR = true;
-  //  REGIS_CMD = TGPS_DATA_I;
+  REQUEST_I = true;
 }
 
 void loop()
 {
-  STATE_BREAK = REQUEST_IX << 8 | REQUEST_VIII << 7 | REQUEST_VII << 6 | REQUEST_VI << 5 | REQUEST_V << 4 | REQUEST_IV << 3 | REQUEST_III << 2 | REQUEST_II << 1 | REQUEST_I;
+  STATE_REQUEST = REQUEST_IX << 8 | REQUEST_VIII << 7 | REQUEST_VII << 6 | REQUEST_VI << 5 | REQUEST_V << 4 | REQUEST_IV << 3 | REQUEST_III << 2 | REQUEST_II << 1 | REQUEST_I;
   if (REGIS_ADDR == true)
   {
     REGIS_DATA_I    = false ;

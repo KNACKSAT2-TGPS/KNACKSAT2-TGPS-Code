@@ -39,10 +39,11 @@ void CHECKTEXT(unsigned long INTERVAL)
       STATE = !STATE;
       return;
     }
-    /*if (REQUEST_I == true || REQUEST_II == true || REQUEST_III == true || REQUEST_IV == true)
-      {
+    if (STATE_REQUEST != 256)
+    {
+      REQUEST_IX = false ;
       break;
-      }*/
+    }
   }
   Serial.println("Micro SD-card initialised. Please wait : " + String(INTERVAL));
   readrecentfile();
@@ -55,15 +56,15 @@ void CHECKTEXT(unsigned long INTERVAL)
     PSS            = true          ;
     ERROR_CHAR = 0;
     COUNT = 0;
-    if (recentfile <= 122)
+    if (LASTED_FILE <= 122)
     {
-      recentfile++;
+      LASTED_FILE++;
     }
-    if (recentfile >= 123)
+    if (LASTED_FILE >= 123)
     {
-      recentfile = 97;
+      LASTED_FILE = 97;
     }
-    String FILENAME = String(char(recentfile)) + ".txt" ;
+    String FILENAME = String(char(LASTED_FILE)) + ".txt" ;
     Serial.print("Opening file "); Serial.println(FILENAME);
     File f = SD.open(FILENAME, O_RDONLY);
     if (!f)
@@ -74,7 +75,7 @@ void CHECKTEXT(unsigned long INTERVAL)
     Serial.println("Checking error");
     while (f.available())
     {
-      FN = recentfile;
+      FN = LASTED_FILE;
       CURRENTMILLIS = millis();
       if ((unsigned long)(CURRENTMILLIS - PREVIOUSMILLIS) >= INTERVAL)
       {
@@ -82,19 +83,19 @@ void CHECKTEXT(unsigned long INTERVAL)
         fx = 1 ;
         break;
       }
-      if (STATE_BREAK != 256)
+      if (STATE_REQUEST != 256)
       {
         REQUEST_IX = false ;
         break;
       }
-      int n = f.read(buf, sizeof(buf));
-      FC = buf[0];
+      int n = f.read(BUFFER, sizeof(BUFFER));
+      FC = BUFFER[0];
       for (int i = 0; i < n; i++)
       {
-        if (buf[i] != 48)
+        if (BUFFER[i] != 48)
         {
           ERROR_CHAR++;
-          Serial.println(buf[i]);
+          Serial.println(BUFFER[i]);
         }
         COUNT++;
       }
@@ -132,8 +133,8 @@ void readrecentfile() {
     Serial.println("===============");
     while (myFile.available())
     {
-      recentfile = myFile.read();
-      Serial.println(char(recentfile));
+      LASTED_FILE = myFile.read();
+      Serial.println(char(LASTED_FILE));
     }
     myFile.close();
     Serial.println("===============");
@@ -157,8 +158,8 @@ void saverecentfile() {
   myFile = SD.open(fileName, FILE_WRITE);
   if (myFile)
   {
-    Serial.print("Writing to "); Serial.print(fileName); Serial.print(" ==> "); Serial.println(String(char(recentfile)));
-    myFile.print(String(char(recentfile)));
+    Serial.print("Writing to "); Serial.print(fileName); Serial.print(" ==> "); Serial.println(String(char(LASTED_FILE)));
+    myFile.print(String(char(LASTED_FILE)));
     myFile.close();
     Serial.println("done.");
   }
