@@ -292,12 +292,10 @@ void setup()
 
   analogReadResolution(12);
 
-  delay(5000);
   Serial.println("TGPS_ID: 0x" + String(TGPS_ID, HEX));
 
   Wire.onReceive(TGPS_RECEIVE);
   Wire.onRequest(TGPS_REQUEST);
-  REQUEST_I = true;
 }
 
 void loop()
