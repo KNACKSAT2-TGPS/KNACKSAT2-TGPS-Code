@@ -46,7 +46,7 @@ void CHECKTEXT(unsigned long INTERVAL)
     }
   }
   Serial.println("Micro SD-card initialised. Please wait : " + String(INTERVAL));
-  readrecentfile();                                                                         //READLASTFILE
+  LASTED_FILE = EEPROM.read(0);                                                             //READEEPROM
   while (true)
   {
     if (((unsigned long)(CURRENTMILLIS - PREVIOUSMILLIS) >= INTERVAL) || fx == 1 )          //TIMEOUT
@@ -56,15 +56,16 @@ void CHECKTEXT(unsigned long INTERVAL)
     PSS            = true          ;
     ERROR_CHAR = 0;
     COUNT = 0;
-    if (LASTED_FILE <= 122)                                                                 //NEXTFILE
+    if (LASTED_FILE < 1000)                                                                 //NEXTFILE
     {
       LASTED_FILE++;
     }
-    if (LASTED_FILE >= 123)                                                                 //FILE Z TO A
+    if (LASTED_FILE == 1000)                                                                //FILE 1000 TO 0
     {
-      LASTED_FILE = 97;
+      LASTED_FILE = 0;
     }
-    String FILENAME = String(char(LASTED_FILE)) + ".txt" ;
+    sprintf(DNT, "%03d",LASTED_FILE);                                                       //TRANSFORM NUMBER INTO 3DIGIT NUMBER
+    String FILENAME = String(DNT) + ".txt" ;
     Serial.print("Opening file "); Serial.println(FILENAME);
     File f = SD.open(FILENAME, O_RDONLY);                                                   //OPENFILE
     if (!f)
@@ -108,64 +109,8 @@ void CHECKTEXT(unsigned long INTERVAL)
   }
   Serial.print("Bit error count : "); Serial.println(ERROR_CHAR);
   Serial.print("From : "); Serial.println(COUNT);
-  saverecentfile();                                                                         //SAVEREADEDFILE
+  EEPROM.write(0, LASTED_FILE);                                                             //WRITE EEPROM
   STATE          = !STATE        ;
   TEP            = millis()      ;
   TP             = TEP - TSP     ;
-}
-
-
-
-void readrecentfile() {
-  File myFile;
-  String fileName = "rf.txt";
-  if (!SD.begin(PIN_SD_CS))
-  {
-    Serial.println("Initialization failed!");
-    return;
-  }
-  Serial.println("Initialization done.");
-  myFile = SD.open(fileName, FILE_READ);                                                    //OPENFILE
-  if (myFile)
-  {
-    Serial.print("Reading from "); Serial.println(fileName);
-    Serial.println("SD" + String(PIN_SD_CS));
-    Serial.println("===============");
-    while (myFile.available())
-    {
-      LASTED_FILE = myFile.read();                                                          //READFILE
-      Serial.println(char(LASTED_FILE));
-    }
-    myFile.close();                                                                         //CLOSEFILE
-    Serial.println("===============");
-  }
-  else
-  {
-    Serial.print("Error opening "); Serial.println(fileName);
-  }
-}
-
-void saverecentfile() {
-  String fileName = "rf.txt";
-  File myFile;
-  if (!SD.begin(PIN_SD_CS))
-  {
-    Serial.println("Initialization failed!");
-    return;
-  }
-  Serial.println("Initialization done.");
-  SD.remove(fileName);                                                                     //DELETE OLD FILE
-  myFile = SD.open(fileName, FILE_WRITE);
-  if (myFile)
-  {
-    Serial.print("Writing to "); Serial.print(fileName); Serial.print(" ==> "); Serial.println(String(char(LASTED_FILE)));
-    myFile.print(String(char(LASTED_FILE)));                                              //WRITEFILE
-    myFile.close();                                                                       //CLOSEFILE
-    Serial.println("done.");
-  }
-  else
-  {
-    // if the file didn't open, print an error:
-    Serial.print("Error opening "); Serial.println(fileName);
-  }
 }
