@@ -46,7 +46,7 @@ void CHECKTEXT(unsigned long INTERVAL)
     }
   }
   Serial.println("Micro SD-card initialised. Please wait : " + String(INTERVAL));
-  LASTED_FILE = EEPROM.read(0);                                                             //READEEPROM
+  EEPROM.get(0, LASTED_FILE);                                                               //READEEPROM
   while (true)
   {
     if (((unsigned long)(CURRENTMILLIS - PREVIOUSMILLIS) >= INTERVAL) || fx == 1 )          //TIMEOUT
@@ -109,7 +109,7 @@ void CHECKTEXT(unsigned long INTERVAL)
   }
   Serial.print("Bit error count : "); Serial.println(ERROR_CHAR);
   Serial.print("From : "); Serial.println(COUNT);
-  EEPROM.write(0, LASTED_FILE);                                                             //WRITE EEPROM
+  EEPROM.put(0, LASTED_FILE);                                                               //WRITE EEPROM
   STATE          = !STATE        ;
   TEP            = millis()      ;
   TP             = TEP - TSP     ;
