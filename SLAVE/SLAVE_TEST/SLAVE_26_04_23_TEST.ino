@@ -59,7 +59,7 @@
 #include <Wire.h>
 #include <RP2040_SD.h>
 #include <SPI.h>
-
+#include <EEPROM.h>
 #include "PRINT_ARRAY.h"
 
 
@@ -165,6 +165,7 @@ uint16_t      RADFET_VI         [16]         ;  // FOR SAVE ANALOG VALUE OF RADF
 uint16_t      RADFET_VII        [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET VII.
 uint16_t      RADFET_VIII       [16]         ;  // FOR SAVE ANALOG VALUE OF RADFET VIII.
 
+char          DNT               [2]          ;  // 3 DIGIT NUMBER TRANSFORMER
 uint8_t       BUFFER            [10240]      ;  // CHARACTER READ EACH TIME.
 uint8_t       LASTED_FILE                    ;  // LASTED FILE
 unsigned long ERROR_CHAR      = 0            ;  // ERROR CHARATER FROM MICRO SD-CARD ONE FILE.
@@ -276,6 +277,7 @@ void setup()
 {
   Wire.begin(TGPS_ID);
   Serial.begin(115200);
+  EEPROM.begin(512);
 
   //
   pinMode(PIN_SD_CS1, OUTPUT);  //PIN SETTING FOR SELECT SD-CARD (SHIELD)
