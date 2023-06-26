@@ -110,7 +110,7 @@ uint16_t      LASTED_FILE_CS2 = 0            ;  // LASTED FILE OF SD CARD NO.2 (
 unsigned long ERROR_CHAR      = 0            ;  // ERROR CHARATER FROM MICRO SD-CARD ONE FILE.
 unsigned long COUNT           = 0            ;  // COUNT CHARATER FROM MICRO SD-CARD ONE FILE.
 
-uint16_t      PSE             =  0x00        ;  // PROCESS START STATE & END STATE
+uint16_t      PSE             = 0x00         ;  // PROCESS START STATE & END STATE
 bool          CS1             = false        ;  // CHIP SELECT 1
 bool          CS2             = false        ;  // CHIP SELECT 2
 bool          BFS             = false        ;  // BEGIN FAILED
@@ -120,7 +120,7 @@ bool          SCS             = false        ;  // START CHECK TEXT
 bool          ECS             = false        ;  // END CHECK TEXT
 bool          SRS             = false        ;  // SAVE RECENT FILE
 uint16_t      FN              = 0            ;  // FILE NAME
-char          CTC             = '0'          ;  // CHARACTER TO CHECK
+byte          CTC             = 0            ;  // CHARACTER TO CHECK
 char          FC              = 0            ;  // FRIST CHARACTER THAT READ FROM FILE
 unsigned long TP              = 0            ;  // TIME PROCESS
 unsigned long TSP             = 0            ;  // TIME START PROCESS
