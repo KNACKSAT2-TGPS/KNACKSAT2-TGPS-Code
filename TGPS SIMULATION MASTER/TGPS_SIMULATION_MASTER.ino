@@ -166,7 +166,7 @@ void loop()
       Serial.println(">>> PROCESS START & END STATUS");
       Serial.println("CHIP SELECT 1       : " + String(RECEIVE_DATA[216] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
       Serial.println("CHIP SELECT 2       : " + String(RECEIVE_DATA[216] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
-      Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[216] >> 5 & 1 ? "INITIALISATION FALIED" : "INITIALISATION SUCCESSFULLY"));
+      Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[216] >> 5 & 1 ? "BEGIN FAILED" : "BEGIN"));
       Serial.println("TIME OUT            : " + String(RECEIVE_DATA[216] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
       Serial.println("READ RECENT FILE    : " + String(RECEIVE_DATA[216] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
       Serial.println("START CHECK TEXT    : " + String(RECEIVE_DATA[216] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
@@ -183,7 +183,7 @@ void loop()
       Serial.println(">>> PROCESS START & END STATUS");
       Serial.println("CHIP SELECT 1       : " + String(RECEIVE_DATA[233] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
       Serial.println("CHIP SELECT 2       : " + String(RECEIVE_DATA[233] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
-      Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[233] >> 5 & 1 ? "INITIALISATION FALIED" : "INITIALISATION SUCCESSFULLY"));
+      Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[233] >> 5 & 1 ? "BEGIN FALIED" : "BEGIN"));
       Serial.println("TIME OUT            : " + String(RECEIVE_DATA[233] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
       Serial.println("READ RECENT FILE    : " + String(RECEIVE_DATA[233] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
       Serial.println("START CHECK TEXT    : " + String(RECEIVE_DATA[233] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
