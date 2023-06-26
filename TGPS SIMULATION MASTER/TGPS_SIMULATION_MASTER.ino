@@ -4,7 +4,7 @@
 //       - PONGSAPAT  LAKROD
 
 // =====================<<< LIBRARY >>>====================
-// LIBRARY IN MASTER SIM
+// LIBRARY IN MASTER SIMULATION 
 #include <Wire.h>
 
 
