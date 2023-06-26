@@ -1,7 +1,5 @@
-# Heading
+# Program for KNACKSAT 2
 
-## Setup
+## Test program in 
 
 ## Description code
-
-## License
