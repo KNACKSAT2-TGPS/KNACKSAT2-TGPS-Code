@@ -394,7 +394,7 @@ void READ_RADFET(uint8_t S)
     if ((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT)break;
     if ((unsigned long)(millis() - PREVIOUS_TIME_2) >= SET_TIME_READ)
     {
-      digitalWrite(S2 , S >> 2 & 1); digitalWrite(S1 , S >> 1 & 1); digitalWrite(S0 , S & 1); RADFET_DATA[i] = analogRead(A);  Serial.print(String(RADFET_DATA[i]) + " ");
+      RADFET_DATA[i] = analogRead(A);  Serial.print(String(RADFET_DATA[i]) + " ");
       i++;
       PREVIOUS_TIME_2 = millis();
     }
