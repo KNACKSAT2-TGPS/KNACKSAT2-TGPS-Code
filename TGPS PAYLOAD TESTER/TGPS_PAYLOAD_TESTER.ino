@@ -125,15 +125,15 @@ char          FC              = 0            ;  // FRIST CHARACTER THAT READ FRO
 unsigned long TP              = 0            ;  // TIME PROCESS
 unsigned long TSP             = 0            ;  // TIME START PROCESS
 
-// RECEIVE BUFFER
+// RECEIVE BUS
 byte          REGIS_CMD       = 0xFF         ;
 
-// TRANSMIT BUFFER
+// TRANSMIT BUS
 byte          FEEDBACK_CMD    = 0xFF         ;
 
-// =========================<<< BUFFER PLAN >>>========================
+// ==========================<<< BUS PLAN >>>==========================
 //
-//                                 BUFFER
+//                                 BUS
 //           TITLE                           SIZE      INDEXS
 //       >>> READ RADFET SENSOR 8 CHANNEL
 //             ANALOG VALUE              : 1.5 BYTES    0-215
@@ -157,8 +157,8 @@ byte          FEEDBACK_CMD    = 0xFF         ;
 //             TOTAL                       250 BYTES    0-249
 //             ================================================
 //
-// =======================<<< BUFFER PACKET >>>========================
-byte          BUFFER            [250]        ;  // BUFFER MAIN MISSION
+// =========================<<< BUS PACKET >>>=========================
+byte          BUS                  [250]        ;  // BUS MAIN MISSION
 // ====================================================================
 
 
@@ -202,7 +202,8 @@ void setup()
 
   analogReadResolution(12);
 
-  delay(5000);   // DELAY FOR WATCH THAT MATER CAN SERIAL COMMUNICATON.
+  //delay(5000);      // DELAY FOR SEE SETUP SERIAL PRINT.
+  //while(!Serial);   // FOR SEE SETUP SERIAL PRINT USE ARDUINO IDE 2.0+.
 
   Serial.println("===================<<< TGPS PAYLOAD >>>===================");
   Serial.println("TGPS ID ADDRESS : 0x" + String(TGPS_ID, HEX));
@@ -265,7 +266,7 @@ void loop1()
     Serial.print("CHANNEL 7 : "); READ_RADFET(7); PACK_RADFET( 189);
 
     Serial.println(">>> READ RADFET SUCCESSFULLY.");
-    Serial.println(">>> SAVE RADFET MISSION DATA TO BUFFER SUCCESSFULLY.");
+    Serial.println(">>> SAVE RADFET MISSION DATA TO BUS SUCCESSFULLY.");
     Serial.println("==========================================================");
 
     // =========================<<< CHECK TEXT >>>=======================
@@ -276,15 +277,15 @@ void loop1()
 
     // =========================<<< SAVE DATA >>>========================
 
-    memcpy(&BUFFER[216],        &PSE, sizeof(       PSE));
-    memcpy(&BUFFER[217],         &FN, sizeof(        FN));
-    memcpy(&BUFFER[219],      &COUNT, sizeof(     COUNT));
-    memcpy(&BUFFER[223], &ERROR_CHAR, sizeof(ERROR_CHAR));
-    memcpy(&BUFFER[227],         &TP, sizeof(        TP));
-    memcpy(&BUFFER[231],        &CTC, sizeof(       CTC));
-    memcpy(&BUFFER[232],         &FC, sizeof(        FC));
+    memcpy(&BUS[216],        &PSE, sizeof(       PSE));
+    memcpy(&BUS[217],         &FN, sizeof(        FN));
+    memcpy(&BUS[219],      &COUNT, sizeof(     COUNT));
+    memcpy(&BUS[223], &ERROR_CHAR, sizeof(ERROR_CHAR));
+    memcpy(&BUS[227],         &TP, sizeof(        TP));
+    memcpy(&BUS[231],        &CTC, sizeof(       CTC));
+    memcpy(&BUS[232],         &FC, sizeof(        FC));
 
-    Serial.println(">>> SAVE SD CARD MISSION DATA TO BUFFER SUCCESSFULLY.");
+    Serial.println(">>> SAVE SD CARD MISSION DATA TO BUS SUCCESSFULLY.");
     Serial.println("==========================================================");
 
     // =========================<<< CHECK TEXT >>>=======================
@@ -295,17 +296,17 @@ void loop1()
 
     // =========================<<< SAVE DATA >>>========================
 
-    memcpy(&BUFFER[233],        &PSE, sizeof(       PSE));
-    memcpy(&BUFFER[234],         &FN, sizeof(        FN));
-    memcpy(&BUFFER[236],      &COUNT, sizeof(     COUNT));
-    memcpy(&BUFFER[240], &ERROR_CHAR, sizeof(ERROR_CHAR));
-    memcpy(&BUFFER[244],         &TP, sizeof(        TP));
-    memcpy(&BUFFER[248],        &CTC, sizeof(       CTC));
-    memcpy(&BUFFER[249],         &FC, sizeof(        FC));
+    memcpy(&BUS[233],        &PSE, sizeof(       PSE));
+    memcpy(&BUS[234],         &FN, sizeof(        FN));
+    memcpy(&BUS[236],      &COUNT, sizeof(     COUNT));
+    memcpy(&BUS[240], &ERROR_CHAR, sizeof(ERROR_CHAR));
+    memcpy(&BUS[244],         &TP, sizeof(        TP));
+    memcpy(&BUS[248],        &CTC, sizeof(       CTC));
+    memcpy(&BUS[249],         &FC, sizeof(        FC));
 
-    Serial.println(">>> SAVE SD CARD MISSION DATA TO BUFFER SUCCESSFULLY.");
+    Serial.println(">>> SAVE SD CARD MISSION DATA TO BUS SUCCESSFULLY.");
     Serial.println("==========================================================");
-    Serial.print(">>> BUFFER : "); PRINT(BUFFER);
+    Serial.print(">>> BUS : "); PRINT(BUS);
     Serial.println("==========================================================");
     Serial.println(((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT) ? ">>> TIME OUT. (12 MINUTES 30 SECOND)" : "MISSION DONE!");
     Serial.println("==========================================================");
@@ -328,9 +329,9 @@ void TGPS_REQUEST()
 
   if (MISSION_DATA == true)
   {
-    Wire.write(BUFFER, 250);
-    memset(BUFFER, 0, sizeof(BUFFER));
-    Serial.println("SEND MISSION DATA " + String(sizeof(BUFFER)) + " BYTES");
+    Wire.write(BUS, 250);
+    memset(BUS, 0, sizeof(BUS));
+    Serial.println("SEND MISSION DATA " + String(sizeof(BUS)) + " BYTES");
     Serial.println("==========================================================");
     REGIS_CMD    = 0xFF  ;
     MISSION_DATA = false ;
@@ -370,8 +371,8 @@ void TGPS_RECEIVE(int RECEIVE_NUMBER)
   }
   if (i != RECEIVE_NUMBER)
   {
-    Serial.println("AVAILABLE BUFFER LENGTH IS NOT THE SAME AS RECEIVE.");
-    Serial.println("BUFFER LENGTH RECEIVE : " + String(i) + " RECEIVE " + String(RECEIVE_NUMBER));
+    Serial.println("AVAILABLE BUS LENGTH IS NOT THE SAME AS RECEIVE.");
+    Serial.println("BUS LENGTH RECEIVE : " + String(i) + " RECEIVE " + String(RECEIVE_NUMBER));
   }
 }
 
@@ -381,7 +382,6 @@ void TGPS_RECEIVE(int RECEIVE_NUMBER)
 
 // READ_RADFET  : READ ANALOG VALUE FROM RADFET SENSOR. (RESOLUTION 12 BITS)
 // S            : SELECT CHANNEL 0 to 7.
-// RADFET_ARRAY : A RADFET ARRAY WANT TO SAVE.
 
 void READ_RADFET(uint8_t S)
 {
@@ -391,6 +391,7 @@ void READ_RADFET(uint8_t S)
   digitalWrite(S2 , S >> 2 & 1); digitalWrite(S1 , S >> 1 & 1); digitalWrite(S0 , S & 1);
   while (i < sizeof(RADFET_DATA) / 2)
   {
+    analogRead(A);
     if ((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT)break;
     if ((unsigned long)(millis() - PREVIOUS_TIME_2) >= SET_TIME_READ)
     {
@@ -406,9 +407,9 @@ void READ_RADFET(uint8_t S)
 
 // ======================<<< PACKET_RADFET >>>=======================
 
-// PACK_RADFET  : SPECIAL PACKING RADFET DATA TO A SAVE SPACE BUFFER AND MORE BUFFER SPACE TO RECORD DATA.
-// RADFET_ARRAY : A RADFET ARRAY TO SAVE INTO BUFFER.
-// START_INDEX  : A START INDEX OF BUFFER TO SAVE RADFET DATA.
+// PACK_RADFET  : SPECIAL PACKING RADFET DATA TO A SAVE SPACE BUS AND MORE BUS SPACE TO RECORD DATA.
+// RADFET_ARRAY : A RADFET ARRAY TO SAVE INTO BUS.
+// START_INDEX  : A START INDEX OF BUS TO SAVE RADFET DATA.
 
 void PACK_RADFET(uint16_t START_INDEX)
 {
@@ -420,9 +421,9 @@ void PACK_RADFET(uint16_t START_INDEX)
   for (int i = 0, j = START_INDEX; i < 18, j < START_INDEX + 26; i += 2, j += 3)
   {
     if ((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT && RADFET_DATA_STATE == 0)break;
-    BUFFER[j]   = RADFET_DATA[i] >> 4;
-    BUFFER[j + 1] = (RADFET_DATA[i] & 0x000F) << 4 | (RADFET_DATA[i + 1] >> 8);
-    BUFFER[j + 2] = RADFET_DATA[i + 1] & 0x00FF;
+    BUS[j]     = RADFET_DATA[i] >> 4 ;
+    BUS[j + 1] = (RADFET_DATA[i] & 0x000F) << 4 | (RADFET_DATA[i + 1] >> 8) ;
+    BUS[j + 2] = RADFET_DATA[i + 1] & 0x00FF ;
   }
 }
 

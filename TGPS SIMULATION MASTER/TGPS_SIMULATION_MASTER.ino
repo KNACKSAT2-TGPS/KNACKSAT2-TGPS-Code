@@ -21,7 +21,7 @@
 
 
 // ====================<<< VARIABLE >>>====================
-// BUFFER DATA
+// BUS DATA
 byte          RECEIVE_DATA         [250] ;
 
 // TIME
@@ -37,10 +37,10 @@ uint16_t      RADFET_CH4           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET C
 uint16_t      RADFET_CH5           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET CHANNEL 5.
 uint16_t      RADFET_CH6           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET CHANNEL 6.
 uint16_t      RADFET_CH7           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET CHANNEL 7.
-
-// =========================<<< BUFFER PLAN >>>========================
+// ====================================================================
+// ==========================<<< BUS PLAN >>>==========================
 //
-//                                 BUFFER
+//                                 BUS
 //           TITLE                           SIZE      INDEXS
 //       >>> READ RADFET SENSOR 8 CHANNEL
 //             ANALOG VALUE              : 1.5 BYTES    0-215
@@ -64,8 +64,8 @@ uint16_t      RADFET_CH7           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET C
 //             TOTAL                       250 BYTES    0-249
 //             ================================================
 //
-// =======================<<< BUFFER PACKET >>>========================
-byte          BUFFER            [250]        ;  // BUFFER MAIN MISSION
+// ========================<<< BUS PACKET >>>==========================
+byte          BUS               [250]        ;  // BUS MAIN MISSION
 // ====================================================================
 
 // ========================<<< PRINT_DATA >>>========================
@@ -88,7 +88,7 @@ void setup()
   Wire.begin();
   Serial.begin(115200);
 
-  delay(5000);   // DELAY FOR WATCH THAT MATER CAN SERIAL COMMUNICATON.
+  while(!Serial);   // WAIT FOR OPEN SERIAL MONITOR.
 
   Serial.println("======================<<< MASTER >>>======================");
   Serial.println("REQUSET DATA : TGPS_DATA    (ADDRESS = 0xD1) KEYWORD =  D1 OR  d1");
@@ -233,8 +233,8 @@ void DOWNLOAD(byte ID_ADDRESS, byte REGISTER, byte *DATA, int SIZE)
   Serial.println("==========================================================");
   if (i != SIZE)
   {
-    Serial.println("BUFFER LENGTH IS NOT THE SAME AS REQUEST.");
-    Serial.println("BUFFER LENGTH RECEIVE : " + String(i) + " (BYTE) REQUEST " + String(SIZE) + " (BYTES)");
+    Serial.println("BUS LENGTH IS NOT THE SAME AS REQUEST.");
+    Serial.println("BUS LENGTH RECEIVE : " + String(i) + " (BYTE) REQUEST " + String(SIZE) + " (BYTES)");
   }
   Serial.println(">>> DOWNLOAD DONE!");
 }
@@ -273,7 +273,7 @@ void UPLOAD(byte ID_ADDRESS, byte REGISTER)
 // UNPACK_RADFET : UNPACK DATA FROM SLAVE TO GET RADFET DATA IN EACH CHANNEL.
 // DATA          : A DATA HAD RECEIVE.
 // RADFET_ARRAY  : A RADFET ARRAY WANT TO SAVE.
-// START_INDEX   : A START INDEX OF BUFFER TO SAVE RADFET DATA.
+// START_INDEX   : A START INDEX OF BUS TO SAVE RADFET DATA.
 
 void UNPACK_RADFET(byte *DATA, uint16_t *RADFET_ARRAY, int START_INDEX) {
   for (int i = START_INDEX, j = 0; i < START_INDEX + 26, j < 18; i += 3, j += 2) 
