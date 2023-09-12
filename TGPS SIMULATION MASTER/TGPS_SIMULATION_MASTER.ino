@@ -129,7 +129,7 @@ void loop()
         UPLOAD(TGPS_ID, TGPS_MISSION);
         END_TIME_PROCESS   = micros();
         Serial.println("TIME PROCESS REGISTER : " + String((unsigned long)(END_TIME_PROCESS - BEGIN_TIME_PROCESS)) + " MICROSECOND");
-        Serial.println("PLEASE WAIT AROUND 12 MINUTE 30 SECOND FOR RECORD DATA IN PAYLOAD AND STAND BY TO SEND REQUEST DATA.");
+        Serial.println("PLEASE WAIT AROUND 10 MINUTE FOR RECORD DATA IN PAYLOAD AND STAND BY TO SEND REQUEST DATA.");
         Serial.println("==========================================================");
         break;
     }
