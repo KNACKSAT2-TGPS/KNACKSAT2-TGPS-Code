@@ -97,7 +97,7 @@ bool          MISSION_RUN     = false        ;  // MISSION RUNING STATE
 // TIME
 unsigned long PREVIOUS_TIME_1 = 0            ;  // SET PREVIOUSTIMETO 0
 unsigned long PREVIOUS_TIME_2 = 0            ;  // SET PREVIOUSTIMETO 0
-unsigned long SET_TIME_OUT    = 750000       ;  // SET UP TIME OUT OVERALL
+unsigned long SET_TIME_OUT    = 600000       ;  // SET UP TIME OUT OVERALL
 unsigned long SET_TIME_READ   = 1000         ;  // SET UP TIME OUT READ RADFET PER TIME SET
 unsigned long SET_TIME_OUT_SD = 300000       ;  // SET UP TIME OUT MISSION SD CARD
 
@@ -308,7 +308,7 @@ void loop1()
     Serial.println("==========================================================");
     Serial.print(">>> BUS : "); PRINT(BUS);
     Serial.println("==========================================================");
-    Serial.println(((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT) ? ">>> TIME OUT. (12 MINUTES 30 SECOND)" : "MISSION DONE!");
+    Serial.println(((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT) ? ">>> TIME OUT. (10 MINUTES)" : "MISSION DONE!");
     Serial.println("==========================================================");
 
     MISSION_RUN = false ;
