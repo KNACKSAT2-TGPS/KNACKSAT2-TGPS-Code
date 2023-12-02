@@ -100,9 +100,9 @@ bool          MISSION_RUN     = false        ;  // MISSION RUNING STATE
 // TIME
 unsigned long PREVIOUS_TIME_1 = 0            ;  // SET PREVIOUSTIMETO 0
 unsigned long PREVIOUS_TIME_2 = 0            ;  // SET PREVIOUSTIMETO 0
-unsigned long SET_TIME_OUT    = 600000       ;  // SET UP TIME OUT OVERALL
+unsigned long SET_TIME_OUT    = 630000       ;  // SET UP TIME OUT OVERALL
 unsigned long SET_TIME_READ   = 1000         ;  // SET UP TIME OUT READ RADFET PER TIME SET
-unsigned long SET_TIME_OUT_SD = 60000        ;  // SET UP TIME OUT MISSION SD CARD
+unsigned long SET_TIME_OUT_SD = 250000       ;  // SET UP TIME OUT MISSION SD CARD
 
 // HISTORY DATA & PROCESS DATA
 uint16_t      RADFET_DATA       [18]         ;  // FOR SAVE ANALOG VALUE OF RADFET CHANNEL 0.
@@ -449,7 +449,8 @@ void SAVE_MISSION_DATA() {
     EEPROM.write(i + 4, BUS[i]);   // WRITE BUS DATA TO FLASH MEMORY
     if ((unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT) break;
   }
-  Serial.println(EEPROM.commit() ? "FLASH MEMORY SUCCESSFULLY COMMITTED" : "ERROR! FLASH MEMORY COMMIT FALIED");
+  if (EEPROM.commit()) Serial.println("FLASH MEMORY SUCCESSFULLY COMMITTED");
+  else Serial.println("ERROR! FLASH MEMORY COMMIT FALIED");
 }
 
 
@@ -480,23 +481,23 @@ void CHECKTEXT(bool CHIP_SELECT)
 
   // =======================<<< SET DEFAULT >>>========================
 
-  PSE             = 0        ;   // PROCESS STATE
-  CS1             = false    ;   // CHIP SELECT 1
-  CS2             = false    ;   // CHIP SELECT 2
-  BFS             = false    ;   // BEGIN FAILED STATE
-  TOS             = false    ;   // TIME OUT STATE
-  RRS             = false    ;   // READ RECENT STATE
-  SCS             = false    ;   // START CHECK STATE
-  ECS             = false    ;   // END CHECK STATE
-  SRS             = false    ;   // SAVE RECENT STATE
+  PSE             = 0        ;  // PROCESS STATE
+  CS1             = false    ;  // CHIP SELECT 1
+  CS2             = false    ;  // CHIP SELECT 2
+  BFS             = false    ;  // BEGIN FAILED STATE
+  TOS             = false    ;  // TIME OUT STATE
+  RRS             = false    ;  // READ RECENT STATE
+  SCS             = false    ;  // START CHECK STATE
+  ECS             = false    ;  // END CHECK STATE
+  SRS             = false    ;  // SAVE RECENT STATE
 
-  LASTED_FILE_CS1 = 0        ;   // RECENT FILE CS1
-  LASTED_FILE_CS2 = 0        ;   // RECENT FILE CS2
-  ERROR_CHAR      = 0        ;   // ERROR CHARACTER
-  COUNT           = 0        ;   // COUNTING CHECK
-  FN              = 0        ;   // FILE NAME
-  FC              = 0        ;   // FIRST CHARACTER
-  TP              = 0        ;   // TIME PROCESS
+  LASTED_FILE_CS1 = 0        ;  // RECENT FILE CS1
+  LASTED_FILE_CS2 = 0        ;  // RECENT FILE CS2
+  ERROR_CHAR      = 0        ;  // ERROR CHARACTER
+  COUNT           = 0        ;  // COUNTING CHECK
+  FN              = 0        ;  // FILE NAME
+  FC              = 0        ;  // FIRST CHARACTER
+  TP              = 0        ;  // TIME PROCESS
 
   Serial.println("============<<< START INITIALISING SD CARD >>>============");
   Serial.println("TIME OUT SET AT " + String(SET_TIME_OUT_SD / 60000) + " MINUTES");
@@ -524,7 +525,7 @@ void CHECKTEXT(bool CHIP_SELECT)
 
   // ===============<<< SD CARD INITIALISATION FAILED >>>==============
 
-  while (!SD.begin(PIN_SD_CS))
+  while (!SD.begin(PIN_SD_CS1))
   {
     Serial.println("SD CARD INITIALISATION FAILED.");
     if ((unsigned long)(millis() - PREVIOUS_TIME_2) >= SET_TIME_OUT_SD || (unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT)          //TIMEOUT
@@ -569,10 +570,7 @@ void CHECKTEXT(bool CHIP_SELECT)
     Serial.println("==============================");
     Serial.println("TRY OPEN FILE " + FILENAME);
 
-    if (CHIP_SELECT == 0)FN  = LASTED_FILE_CS1;
-    if (CHIP_SELECT == 1)FN  = LASTED_FILE_CS2;
-
-    File f = SD.open(FILENAME, O_RDONLY);   // OPEN FILE FOR READ ONLY
+    File f = SD.open(FILENAME, O_RDONLY);   // OPEN FILE
     if (!f)
     {
       Serial.println("FAILE TO OPEN FILE." + FILENAME);
@@ -583,6 +581,8 @@ void CHECKTEXT(bool CHIP_SELECT)
     while (f.available())
     {
       SCS = true ;
+      if (CHIP_SELECT == 0)FN  = LASTED_FILE_CS1;
+      if (CHIP_SELECT == 1)FN  = LASTED_FILE_CS2;
 
       if ((unsigned long)(millis() - PREVIOUS_TIME_2) >= SET_TIME_OUT_SD || (unsigned long)(millis() - PREVIOUS_TIME_1) >= SET_TIME_OUT)           //TIMEOUT
       {
