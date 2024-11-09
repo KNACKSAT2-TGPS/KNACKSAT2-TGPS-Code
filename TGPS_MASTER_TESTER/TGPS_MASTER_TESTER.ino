@@ -20,7 +20,8 @@
 
 // ====================<<< VARIABLE >>>====================
 // BUS DATA
-byte          RECEIVE_DATA         [250] ;
+byte          RECEIVE_DATA         [128] ;
+byte          COMBINE_DATA         [250] ;
 
 // TIME
 unsigned long BEGIN_TIME_PROCESS = 0     ;
@@ -68,7 +69,7 @@ uint16_t      RADFET_CH7           [18]  ;  // FOR SAVE ANALOG VALUE OF RADFET C
 //             ================================================
 //
 // ========================<<< BUS PACKET >>>==========================
-byte          BUS               [250]        ;  // BUS MAIN MISSION
+byte          BUS               [128]        ;  // BUS MAIN MISSION
 // ====================================================================
 
 // ========================<<< PRINT_DATA >>>========================
@@ -106,7 +107,7 @@ void setup()
 void loop()
 {
   while (Serial.available() > 0)
-  {    
+  {
     String CMD = Serial.readStringUntil('\n');
     CMD.trim();
     CMD.toUpperCase();
@@ -129,6 +130,7 @@ void loop()
 
     // =================<<< COMMUNICATION TO PAYLOAD >>>=================
 
+
     if (CMD_FUNCTION == "DOWNLOAD")
     {
       byte REGISTER_INPUT = (byte)strtoul(CMD.substring(SEPARATE_INDEX_2).c_str(), NULL, 16);
@@ -138,11 +140,12 @@ void loop()
       Serial.println("MASTER IS REQUESTING DATA FROM PAYLOAD.");
       Serial.println("PLEASE WAIT FOR DOWNLOAD.");
       BEGIN_TIME_PROCESS = micros();
-      DOWNLOAD(TGPS_ID, REGISTER_INPUT, RECEIVE_DATA, 250);
+      DOWNLOAD(TGPS_ID, REGISTER_INPUT, RECEIVE_DATA, 128);
       END_TIME_PROCESS   = micros();
       Serial.println("TIME PROGRESS : " + String((unsigned long)(END_TIME_PROCESS - BEGIN_TIME_PROCESS)) + " MICROSECONDS");
       Serial.println("==========================================================");
       Serial.println();
+      COMBINE_DATA_FUNC();
     }
     if (CMD_FUNCTION == "UPLOAD")
     {
@@ -324,20 +327,34 @@ void UNPACK_RADFET(byte *DATA, uint16_t *RADFET_ARRAY, int START_INDEX)
 
 
 
+// =======================<<< COMBINE_DATA >>>=======================
+
+// COMBINE_DATA_FUNC   : COMBINE DATA FROM RECEIVE DATA 128(125 USED) BYTES TO 250 BYTES
+
+void COMBINE_DATA_FUNC()
+{
+  if (RECEIVE_DATA[127] == 0)for (int i = 0; i < 125; i++)COMBINE_DATA[i] = RECEIVE_DATA[i];
+  if (RECEIVE_DATA[127] == 1)for (int i = 0; i < 125; i++)COMBINE_DATA[i + 125] = RECEIVE_DATA[i];
+
+  PRINT_ARRAY(COMBINE_DATA);
+}
+
+
+
 // ========================<<< PRINT_UMD >>>=========================
 
 // PRINT_UMD   : PRINT MISSION DATA
 
 void PRINT_UMD()
 {
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH0,   0);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH1,  27);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH2,  54);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH3,  81);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH4, 108);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH5, 135);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH6, 162);
-  UNPACK_RADFET(RECEIVE_DATA, RADFET_CH7, 189);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH0,   0);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH1,  27);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH2,  54);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH3,  81);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH4, 108);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH5, 135);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH6, 162);
+  UNPACK_RADFET(COMBINE_DATA, RADFET_CH7, 189);
   Serial.println("===================<<< RADFET DATA >>>====================");
   Serial.println(">>> RADFET OUTSIDE SHIELD DATA");
   Serial.print("CHANNEL 0 : "); PRINT_ARRAY(RADFET_CH0);
@@ -351,38 +368,38 @@ void PRINT_UMD()
   Serial.print("CHANNEL 7 : "); PRINT_ARRAY(RADFET_CH7);
   Serial.println("================<<< SD CARD NO.1 DATA >>>=================");
   Serial.println(">>> PROCESS START & END STATUS");
-  Serial.println("CHIP SELECT 1       : " + String(RECEIVE_DATA[216] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
-  Serial.println("CHIP SELECT 2       : " + String(RECEIVE_DATA[216] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
-  Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[216] >> 5 & 1 ? "BEGIN FAILED" : "BEGIN"));
-  Serial.println("TIME OUT            : " + String(RECEIVE_DATA[216] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
-  Serial.println("READ RECENT FILE    : " + String(RECEIVE_DATA[216] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
-  Serial.println("START CHECK TEXT    : " + String(RECEIVE_DATA[216] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
-  Serial.println("END CHECK TEXT      : " + String(RECEIVE_DATA[216] >> 1 & 1 ? "END CHECK SUCCESS" : "NO END CHECK"));
-  Serial.println("SAVE RECENT FILE    : " + String(RECEIVE_DATA[216] & 1 ? "SAVE RECENT FILE NAME SUCCESS" : "NO SAVE RECENT FILE NAME"));
+  Serial.println("CHIP SELECT 1       : " + String(COMBINE_DATA[216] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
+  Serial.println("CHIP SELECT 2       : " + String(COMBINE_DATA[216] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
+  Serial.println("BEGIN FAILED        : " + String(COMBINE_DATA[216] >> 5 & 1 ? "BEGIN FAILED" : "BEGIN"));
+  Serial.println("TIME OUT            : " + String(COMBINE_DATA[216] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
+  Serial.println("READ RECENT FILE    : " + String(COMBINE_DATA[216] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
+  Serial.println("START CHECK TEXT    : " + String(COMBINE_DATA[216] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
+  Serial.println("END CHECK TEXT      : " + String(COMBINE_DATA[216] >> 1 & 1 ? "END CHECK SUCCESS" : "NO END CHECK"));
+  Serial.println("SAVE RECENT FILE    : " + String(COMBINE_DATA[216] & 1 ? "SAVE RECENT FILE NAME SUCCESS" : "NO SAVE RECENT FILE NAME"));
   Serial.println(">>> CHECK TEXT DATA");
-  Serial.println("FILE NAME           : " + String(RECEIVE_DATA[217] ? String(RECEIVE_DATA[218] << 8 | RECEIVE_DATA[217]) + ".txt" : "NO FILE NAME."));
-  Serial.println("COUNTING CHECK      : " + String(RECEIVE_DATA[222] << 24 | RECEIVE_DATA[221] << 16 | RECEIVE_DATA[220] << 8 | RECEIVE_DATA[219]));
-  Serial.println("ERROR CHARACTER     : " + String(RECEIVE_DATA[226] << 24 | RECEIVE_DATA[225] << 16 | RECEIVE_DATA[224] << 8 | RECEIVE_DATA[223]));
-  Serial.println("TIME PROCESS        : " + String(RECEIVE_DATA[230] << 24 | RECEIVE_DATA[229] << 16 | RECEIVE_DATA[228] << 8 | RECEIVE_DATA[227]) + " MILLISECONDS");
-  Serial.println("CHARACTERS TO CHECK : " + String(char(RECEIVE_DATA[231])));
-  Serial.println("FIRST CHARACTER     : " + String(char(RECEIVE_DATA[232])));
+  Serial.println("FILE NAME           : " + String(COMBINE_DATA[217] ? String(COMBINE_DATA[218] << 8 | COMBINE_DATA[217]) + ".txt" : "NO FILE NAME."));
+  Serial.println("COUNTING CHECK      : " + String(COMBINE_DATA[222] << 24 | COMBINE_DATA[221] << 16 | COMBINE_DATA[220] << 8 | COMBINE_DATA[219]));
+  Serial.println("ERROR CHARACTER     : " + String(COMBINE_DATA[226] << 24 | COMBINE_DATA[225] << 16 | COMBINE_DATA[224] << 8 | COMBINE_DATA[223]));
+  Serial.println("TIME PROCESS        : " + String(COMBINE_DATA[230] << 24 | COMBINE_DATA[229] << 16 | COMBINE_DATA[228] << 8 | COMBINE_DATA[227]) + " MILLISECONDS");
+  Serial.println("CHARACTERS TO CHECK : " + String(char(COMBINE_DATA[231])));
+  Serial.println("FIRST CHARACTER     : " + String(char(COMBINE_DATA[232])));
   Serial.println("============<<< SD CARD NO.2 (SHIELD) DATA >>>============");
   Serial.println(">>> PROCESS START & END STATUS");
-  Serial.println("CHIP SELECT 1       : " + String(RECEIVE_DATA[233] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
-  Serial.println("CHIP SELECT 2       : " + String(RECEIVE_DATA[233] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
-  Serial.println("BEGIN FAILED        : " + String(RECEIVE_DATA[233] >> 5 & 1 ? "BEGIN FALIED" : "BEGIN"));
-  Serial.println("TIME OUT            : " + String(RECEIVE_DATA[233] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
-  Serial.println("READ RECENT FILE    : " + String(RECEIVE_DATA[233] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
-  Serial.println("START CHECK TEXT    : " + String(RECEIVE_DATA[233] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
-  Serial.println("END CHECK TEXT      : " + String(RECEIVE_DATA[233] >> 1 & 1 ? "END CHECK SUCCESS" : "NO END CHECK"));
-  Serial.println("SAVE RECENT FILE    : " + String(RECEIVE_DATA[233] & 1 ? "SAVE RECENT FILE NAME SUCCESS" : "NO SAVE RECENT FILE NAME"));
+  Serial.println("CHIP SELECT 1       : " + String(COMBINE_DATA[233] >> 7 & 1 ? "SELECTED" : "NON SELECTED"));
+  Serial.println("CHIP SELECT 2       : " + String(COMBINE_DATA[233] >> 6 & 1 ? "SELECTED" : "NON SELECTED"));
+  Serial.println("BEGIN FAILED        : " + String(COMBINE_DATA[233] >> 5 & 1 ? "BEGIN FALIED" : "BEGIN"));
+  Serial.println("TIME OUT            : " + String(COMBINE_DATA[233] >> 4 & 1 ? "TIME OUT" : "IN TIME"));
+  Serial.println("READ RECENT FILE    : " + String(COMBINE_DATA[233] >> 3 & 1 ? "READ RECENT FILE NAME SUCCESS" : "NO READ RECENT FILE NAME"));
+  Serial.println("START CHECK TEXT    : " + String(COMBINE_DATA[233] >> 2 & 1 ? "START CHECK SUCCESS" : "NO START CHECK"));
+  Serial.println("END CHECK TEXT      : " + String(COMBINE_DATA[233] >> 1 & 1 ? "END CHECK SUCCESS" : "NO END CHECK"));
+  Serial.println("SAVE RECENT FILE    : " + String(COMBINE_DATA[233] & 1 ? "SAVE RECENT FILE NAME SUCCESS" : "NO SAVE RECENT FILE NAME"));
   Serial.println(">>> CHECK TEXT DATA");
-  Serial.println("FILE NAME           : " + String(RECEIVE_DATA[234] ? String(RECEIVE_DATA[235] << 8 | RECEIVE_DATA[234]) + ".txt" : "NO FILE NAME."));
-  Serial.println("COUNTING CHECK      : " + String(RECEIVE_DATA[239] << 24 | RECEIVE_DATA[238] << 16 | RECEIVE_DATA[237] << 8 | RECEIVE_DATA[236]));
-  Serial.println("ERROR CHARACTER     : " + String(RECEIVE_DATA[243] << 24 | RECEIVE_DATA[242] << 16 | RECEIVE_DATA[241] << 8 | RECEIVE_DATA[240]));
-  Serial.println("TIME PROCESS        : " + String(RECEIVE_DATA[247] << 24 | RECEIVE_DATA[246] << 16 | RECEIVE_DATA[245] << 8 | RECEIVE_DATA[244]) + " MILLISECONDS");
-  Serial.println("CHARACTERS TO CHECK : " + String(char(RECEIVE_DATA[248])));
-  Serial.println("FIRST CHARACTER     : " + String(char(RECEIVE_DATA[249])));
+  Serial.println("FILE NAME           : " + String(COMBINE_DATA[234] ? String(COMBINE_DATA[235] << 8 | COMBINE_DATA[234]) + ".txt" : "NO FILE NAME."));
+  Serial.println("COUNTING CHECK      : " + String(COMBINE_DATA[239] << 24 | COMBINE_DATA[238] << 16 | COMBINE_DATA[237] << 8 | COMBINE_DATA[236]));
+  Serial.println("ERROR CHARACTER     : " + String(COMBINE_DATA[243] << 24 | COMBINE_DATA[242] << 16 | COMBINE_DATA[241] << 8 | COMBINE_DATA[240]));
+  Serial.println("TIME PROCESS        : " + String(COMBINE_DATA[247] << 24 | COMBINE_DATA[246] << 16 | COMBINE_DATA[245] << 8 | COMBINE_DATA[244]) + " MILLISECONDS");
+  Serial.println("CHARACTERS TO CHECK : " + String(char(COMBINE_DATA[248])));
+  Serial.println("FIRST CHARACTER     : " + String(char(COMBINE_DATA[249])));
   Serial.println("==========================================================");
 }
 
